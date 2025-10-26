@@ -1,0 +1,47 @@
+services:
+  garmin-mcp-stdio:
+    build: .
+    container_name: garmin-mcp-stdio
+    environment:
+      - GARMIN_EMAIL=${GARMIN_EMAIL}
+      - GARMIN_PASSWORD=${GARMIN_PASSWORD}
+      - MCP_MODE=stdio
+    volumes:
+      - ./garmin-tokens:/home/mcp/.garminconnect
+    profiles:
+      - stdio
+
+  garmin-mcp-sse:
+    build: .
+    container_name: garmin-mcp-sse
+    environment:
+      - GARMIN_EMAIL=${GARMIN_EMAIL}
+      - GARMIN_PASSWORD=${GARMIN_PASSWORD}
+      - MCP_MODE=sse
+      - MCP_HOST=0.0.0.0
+      - MCP_PORT=8080
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./garmin-tokens:/home/mcp/.garminconnect
+    profiles:
+      - sse
+
+  garmin-mcp-http:
+    build: .
+    container_name: garmin-mcp-http
+    environment:
+      - GARMIN_EMAIL=${GARMIN_EMAIL}
+      - GARMIN_PASSWORD=${GARMIN_PASSWORD}
+      - MCP_MODE=http
+      - MCP_HOST=0.0.0.0
+      - MCP_PORT=8080
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./garmin-tokens:/home/mcp/.garminconnect
+    profiles:
+      - http
+
+
+

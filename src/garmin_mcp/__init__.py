@@ -3,6 +3,7 @@ Modular MCP Server for Garmin Connect Data
 """
 
 import os
+import sys
 
 import requests
 from mcp.server.fastmcp import FastMCP
@@ -33,6 +34,11 @@ email = os.environ.get("GARMIN_EMAIL")
 password = os.environ.get("GARMIN_PASSWORD")
 tokenstore = os.getenv("GARMINTOKENS") or "~/.garminconnect"
 tokenstore_base64 = os.getenv("GARMINTOKENS_BASE64") or "~/.garminconnect_base64"
+
+# Get MCP server mode from environment
+mcp_mode = os.getenv("MCP_MODE", "stdio").lower()
+mcp_host = os.getenv("MCP_HOST", "127.0.0.1")
+mcp_port = int(os.getenv("MCP_PORT", "8080"))
 
 
 def init_api(email, password):
@@ -155,8 +161,23 @@ def main():
         except Exception as e:
             return f"Error retrieving activities: {str(e)}"
 
-    # Run the MCP server
-    app.run()
+    # Run the MCP server based on the configured mode
+    print(f"Starting MCP server in {mcp_mode} mode...")
+    
+    if mcp_mode == "stdio":
+        # Default stdio mode
+        app.run()
+    elif mcp_mode == "sse":
+        # Server-Sent Events mode
+        print(f"Starting SSE server on {mcp_host}:{mcp_port}")
+        app.run(transport="sse", host=mcp_host, port=mcp_port)
+    elif mcp_mode == "http":
+        # HTTP streamable mode
+        print(f"Starting HTTP streamable server on {mcp_host}:{mcp_port}")
+        app.run(transport="http", host=mcp_host, port=mcp_port)
+    else:
+        print(f"ERROR: Unknown MCP_MODE '{mcp_mode}'. Supported modes: stdio, sse, http")
+        sys.exit(1)
 
 
 if __name__ == "__main__":

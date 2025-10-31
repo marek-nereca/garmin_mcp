@@ -4,13 +4,14 @@ Modular MCP Server for Garmin Connect Data
 
 import os
 import sys
+from pathlib import Path
 
 import requests
 from garminconnect import Garmin, GarminConnectAuthenticationError
 from garth.exc import GarthHTTPError
 from mcp.server.fastmcp import FastMCP
+from tomllib import load as load_toml
 
-# Import all modules
 from garmin_mcp import (
     activity_management,
     challenges,
@@ -24,6 +25,27 @@ from garmin_mcp import (
     womens_health,
     workouts,
 )
+
+
+def _get_version() -> str:
+    """Get version from pyproject.toml."""
+    # Find project root (parent of src directory)
+    current_file = Path(__file__)
+    project_root = current_file.parent.parent.parent
+    pyproject_path = project_root / "pyproject.toml"
+
+    try:
+        with open(pyproject_path, "rb") as f:
+            pyproject = load_toml(f)
+            return pyproject["project"]["version"]
+    except (FileNotFoundError, KeyError):
+        # Fallback version if pyproject.toml cannot be read
+        return "0.0.0"
+
+
+__version__ = _get_version()
+
+# Import all modules
 
 
 def get_mfa() -> str:
@@ -124,7 +146,7 @@ def main():
     womens_health.configure(garmin_client)
 
     # Create the MCP app
-    app = FastMCP("Garmin Connect v1.0")
+    app = FastMCP(f"Garmin Connect v{__version__}")
 
     # Register tools from all modules
     app = activity_management.register_tools(app)

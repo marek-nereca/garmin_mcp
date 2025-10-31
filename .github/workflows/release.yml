@@ -46,6 +46,35 @@ jobs:
             echo "exact_version=$VERSION" >> $GITHUB_OUTPUT
           fi
 
+      - name: Validate version matches pyproject.toml
+        run: |
+          # Extract version from tag (remove 'v' prefix)
+          TAG_VERSION=${GITHUB_REF#refs/tags/v}
+          
+          # Read version from pyproject.toml using Python
+          PYPROJECT_VERSION=$(python3 -c "import tomllib; f = open('pyproject.toml', 'rb'); data = tomllib.load(f); print(data['project']['version'])")
+          
+          echo "Tag version: $TAG_VERSION"
+          echo "pyproject.toml version: $PYPROJECT_VERSION"
+          
+          # For beta releases, check if tag starts with pyproject version
+          # For regular releases, versions must match exactly
+          if [[ "$TAG_VERSION" == *"beta"* ]]; then
+            # Extract base version from tag (e.g., "1.2.3-beta.1" -> "1.2.3")
+            BASE_VERSION=$(echo "$TAG_VERSION" | sed 's/-beta.*//')
+            if [[ "$PYPROJECT_VERSION" != "$BASE_VERSION" ]]; then
+              echo "ERROR: Tag base version ($BASE_VERSION) does not match pyproject.toml version ($PYPROJECT_VERSION)"
+              exit 1
+            fi
+          else
+            if [[ "$PYPROJECT_VERSION" != "$TAG_VERSION" ]]; then
+              echo "ERROR: Tag version ($TAG_VERSION) does not match pyproject.toml version ($PYPROJECT_VERSION)"
+              exit 1
+            fi
+          fi
+          
+          echo "✓ Version validation passed"
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 

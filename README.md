@@ -145,13 +145,13 @@ MCP_MODE=stdio uv run garmin-mcp
 #### SSE Mode
 ```bash
 # Run in Server-Sent Events mode
-MCP_MODE=sse MCP_HOST=0.0.0.0 MCP_PORT=8000 uv run garmin-mcp
+MCP_MODE=sse uv run garmin-mcp
 ```
 
 #### HTTP Streamable Mode
 ```bash
 # Run in HTTP streamable mode
-MCP_MODE=http MCP_HOST=0.0.0.0 MCP_PORT=8000 uv run garmin-mcp
+MCP_MODE=http uv run garmin-mcp
 ```
 
 

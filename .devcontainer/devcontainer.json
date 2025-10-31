@@ -29,17 +29,17 @@
       }
     }
   },
-  "forwardPorts": [8080],
+  "forwardPorts": [
+    8000
+  ],
   "portsAttributes": {
-    "8080": {
-      "label": "MCP Server (HTTP/SSE)",
+    "8000": {
+      "label": "MCP Server (SSE and HTTP)",
       "onAutoForward": "notify"
     }
   },
   "postCreateCommand": "pip install uv && uv sync",
   "containerEnv": {
-    "MCP_MODE": "sse",
-    "MCP_HOST": "0.0.0.0",
-    "MCP_PORT": "8080"
+    "MCP_MODE": "sse"
   }
 }

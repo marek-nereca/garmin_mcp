@@ -18,10 +18,8 @@ services:
       - GARMIN_EMAIL=${GARMIN_EMAIL}
       - GARMIN_PASSWORD=${GARMIN_PASSWORD}
       - MCP_MODE=sse
-      - MCP_HOST=0.0.0.0
-      - MCP_PORT=8080
     ports:
-      - "8080:8080"
+      - "8000:8000"
     volumes:
       - ./garmin-tokens:/home/mcp/.garminconnect
     profiles:
@@ -34,10 +32,8 @@ services:
       - GARMIN_EMAIL=${GARMIN_EMAIL}
       - GARMIN_PASSWORD=${GARMIN_PASSWORD}
       - MCP_MODE=http
-      - MCP_HOST=0.0.0.0
-      - MCP_PORT=8080
     ports:
-      - "8080:8080"
+      - "8000:8000"
     volumes:
       - ./garmin-tokens:/home/mcp/.garminconnect
     profiles:

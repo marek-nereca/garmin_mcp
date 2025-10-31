@@ -6,39 +6,41 @@ import os
 import sys
 
 import requests
+from garminconnect import Garmin, GarminConnectAuthenticationError
+from garth.exc import GarthHTTPError
 from mcp.server.fastmcp import FastMCP
 
-from garth.exc import GarthHTTPError
-from garminconnect import Garmin, GarminConnectAuthenticationError
-
 # Import all modules
-from garmin_mcp import activity_management
-from garmin_mcp import health_wellness
-from garmin_mcp import user_profile
-from garmin_mcp import devices
-from garmin_mcp import gear_management
-from garmin_mcp import weight_management
-from garmin_mcp import challenges
-from garmin_mcp import training
-from garmin_mcp import workouts
-from garmin_mcp import data_management
-from garmin_mcp import womens_health
+from garmin_mcp import (
+    activity_management,
+    challenges,
+    data_management,
+    devices,
+    gear_management,
+    health_wellness,
+    training,
+    user_profile,
+    weight_management,
+    womens_health,
+    workouts,
+)
+
 
 def get_mfa() -> str:
     """Get MFA code from user input"""
     print("\nGarmin Connect MFA required. Please check your email/phone for the code.")
     return input("Enter MFA code: ")
 
+
 # Get credentials from environment
 email = os.environ.get("GARMIN_EMAIL")
 password = os.environ.get("GARMIN_PASSWORD")
 tokenstore = os.getenv("GARMINTOKENS") or "~/.garminconnect"
-tokenstore_base64 = os.getenv("GARMINTOKENS_BASE64") or "~/.garminconnect_base64"
+tokenstore_base64 = os.getenv(
+    "GARMINTOKENS_BASE64") or "~/.garminconnect_base64"
 
 # Get MCP server mode from environment
 mcp_mode = os.getenv("MCP_MODE", "stdio").lower()
-mcp_host = os.getenv("MCP_HOST", "127.0.0.1")
-mcp_port = int(os.getenv("MCP_PORT", "8080"))
 
 
 def init_api(email, password):
@@ -163,20 +165,21 @@ def main():
 
     # Run the MCP server based on the configured mode
     print(f"Starting MCP server in {mcp_mode} mode...")
-    
+
     if mcp_mode == "stdio":
         # Default stdio mode
         app.run()
     elif mcp_mode == "sse":
         # Server-Sent Events mode
-        print(f"Starting SSE server on {mcp_host}:{mcp_port}")
-        app.run(transport="sse", host=mcp_host, port=mcp_port)
+        print("Starting SSE server...")
+        app.run(transport="sse")
     elif mcp_mode == "http":
-        # HTTP streamable mode
-        print(f"Starting HTTP streamable server on {mcp_host}:{mcp_port}")
-        app.run(transport="http", host=mcp_host, port=mcp_port)
+        # Server-Sent Events mode
+        print("Starting SSE server...")
+        app.run(transport="streamable-http")
     else:
-        print(f"ERROR: Unknown MCP_MODE '{mcp_mode}'. Supported modes: stdio, sse, http")
+        print(
+            f"ERROR: Unknown MCP_MODE '{mcp_mode}'. Supported modes: stdio, sse")
         sys.exit(1)
 
 

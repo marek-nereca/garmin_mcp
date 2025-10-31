@@ -5,8 +5,6 @@ FROM python:3.12-slim
 ENV PYTHONUNBUFFERED=1
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV MCP_MODE=stdio
-ENV MCP_HOST=0.0.0.0
-ENV MCP_PORT=8080
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
@@ -34,8 +32,8 @@ USER mcp
 # Create directory for Garmin tokens
 RUN mkdir -p /home/mcp/.garminconnect
 
-# Expose port for sse/http modes
-EXPOSE 8080
+# Expose port for sse and http modes
+EXPOSE 8000
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \

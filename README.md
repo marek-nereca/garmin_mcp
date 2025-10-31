@@ -76,8 +76,6 @@ The server supports the following environment variables:
 - `GARMINTOKENS`: Path to store authentication tokens (default: `~/.garminconnect`)
 - `GARMINTOKENS_BASE64`: Path to store base64-encoded tokens (default: `~/.garminconnect_base64`)
 - `MCP_MODE`: Server transport mode - `stdio` (default), `sse`, or `http`
-- `MCP_HOST`: Host address for sse/http modes (default: `127.0.0.1`)
-- `MCP_PORT`: Port number for sse/http modes (default: `8080`)
 
 ### Server Modes
 
@@ -147,13 +145,13 @@ MCP_MODE=stdio uv run garmin-mcp
 #### SSE Mode
 ```bash
 # Run in Server-Sent Events mode
-MCP_MODE=sse MCP_HOST=0.0.0.0 MCP_PORT=8080 uv run garmin-mcp
+MCP_MODE=sse MCP_HOST=0.0.0.0 MCP_PORT=8000 uv run garmin-mcp
 ```
 
 #### HTTP Streamable Mode
 ```bash
 # Run in HTTP streamable mode
-MCP_MODE=http MCP_HOST=0.0.0.0 MCP_PORT=8080 uv run garmin-mcp
+MCP_MODE=http MCP_HOST=0.0.0.0 MCP_PORT=8000 uv run garmin-mcp
 ```
 
 

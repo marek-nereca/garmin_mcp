@@ -37,7 +37,7 @@ EXPOSE 8000
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
-    CMD python -c "import sys; sys.path.insert(0, 'src'); from garmin_mcp import main" || exit 1
+    CMD uv run python -c "import sys; sys.path.insert(0, 'src'); from garmin_mcp import main" || exit 1
 
 # Default command
 CMD ["uv", "run", "garmin-mcp"]

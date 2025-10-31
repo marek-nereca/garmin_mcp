@@ -189,15 +189,13 @@ def main():
     print(f"Starting MCP server in {mcp_mode} mode...")
 
     if mcp_mode == "stdio":
-        # Default stdio mode
+        print("Starting in stdio mode...")
         app.run()
     elif mcp_mode == "sse":
-        # Server-Sent Events mode
         print("Starting SSE server...")
         app.run(transport="sse")
     elif mcp_mode == "http":
-        # Server-Sent Events mode
-        print("Starting SSE server...")
+        print("Starting HTTP streamable server...")
         app.run(transport="streamable-http")
     else:
         print(

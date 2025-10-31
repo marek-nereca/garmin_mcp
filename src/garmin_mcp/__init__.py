@@ -64,6 +64,19 @@ tokenstore_base64 = os.getenv(
 # Get MCP server mode from environment
 mcp_mode = os.getenv("MCP_MODE", "stdio").lower()
 
+# Get MCP host and port from environment
+# Default to 0.0.0.0 for http/sse modes, 127.0.0.1 for stdio
+mcp_host = os.getenv("MCP_HOST")
+if mcp_host is None:
+    # Default to 0.0.0.0 for http/sse modes so it's accessible
+    # from outside containers
+    mcp_host = (
+        "0.0.0.0" if mcp_mode in ("http", "sse") else "127.0.0.1"
+    )
+
+# Default port is 8000
+mcp_port = int(os.getenv("MCP_PORT", "8000"))
+
 
 def init_api(email, password):
     """Initialize Garmin API with your credentials."""
@@ -145,8 +158,10 @@ def main():
     data_management.configure(garmin_client)
     womens_health.configure(garmin_client)
 
-    # Create the MCP app
-    app = FastMCP(f"Garmin Connect v{__version__}")
+    # Create the MCP app with host and port configuration
+    app = FastMCP(
+        f"Garmin Connect v{__version__}", host=mcp_host, port=mcp_port
+    )
 
     # Register tools from all modules
     app = activity_management.register_tools(app)

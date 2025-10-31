@@ -76,6 +76,8 @@ The server supports the following environment variables:
 - `GARMINTOKENS`: Path to store authentication tokens (default: `~/.garminconnect`)
 - `GARMINTOKENS_BASE64`: Path to store base64-encoded tokens (default: `~/.garminconnect_base64`)
 - `MCP_MODE`: Server transport mode - `stdio` (default), `sse`, or `http`
+- `MCP_HOST`: Server host address (default: `127.0.0.1` for stdio, `0.0.0.0` for sse/http)
+- `MCP_PORT`: Server port number (default: `8000`)
 
 ### Server Modes
 
